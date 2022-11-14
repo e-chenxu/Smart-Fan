@@ -7,8 +7,7 @@ import time
 CFace = 0
 
 # webcam face detection
-cascPath = sys.argv[1]
-faceCascade = cv2.CascadeClassifier(cascPath)
+faceCascade = cv2.CascadeClassifier(r"C:\Users\Eric\PycharmProjects\Smart-Fan\haarcascade_fullbody.xml")
 
 
 cap = cv2.VideoCapture(0)
