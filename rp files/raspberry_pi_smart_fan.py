@@ -1,7 +1,7 @@
 # Name: Eric Chen
 # ID: 89351145
 
-### import Python Modules ###yCaaasssssss
+### import Python Modules ###
 import RPi.GPIO as GPIO
 import numpy as py
 import cv2
