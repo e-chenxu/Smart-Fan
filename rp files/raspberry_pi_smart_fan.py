@@ -32,83 +32,87 @@ servo = GPIO.PWM(SRV_P, 50)
 
 servo.start(7.5)
 servo.ChangeDutyCycle(0)
+
+# sleep to allow servo to get time
 time.sleep(2)
 
-# arrays and such
+# initial positions
 currentPos = 7.5
-max_right_pos = False
-max_left_pos = True
-minPos = 3  # This is the most left position within non-breakage range for the servo
-maxPos = 11.5  # This is the most right position within non-breakage range for the servo
-rangeRight = 230  # This refers the the X range for the face detection
-rangeLeft = 140  # Same as reangeRight.
+max_right_p = False
+max_left_p = True
 
-# If it's moving to fast and not stoping on a face mess with this variable The higher the number
-# the bigger the increment it will move.
-incrementServo = .15
 
+min_p = 3                # max left position of servo
+max_p = 11.5             # max right positioon of servo
+scan_range_right = 230   # max right scan
+scan_range_left = 140    # max left scan
+
+increment = .15
+
+# setting up webcam
 cap = cv2.VideoCapture(0)
-cap.set(3, 320)
-cap.set(4, 240)
+cap.set(3, 320)  # width
+cap.set(4, 240)  # height
 
 
-# Functions
-
-# Checks if the servo is in the max position to the left or right. If its not then it just
-# moves the servo to the right until it's in the max right position and then moves it to the
-# the max left position.
-def scan():
+# function will scan for a face if nothing in view
+def scan_face():
     global currentPos
-    global max_right_pos
-    global max_left_pos
+    global max_right_p
+    global max_left_p
 
-    if not max_right_pos:
+    if not max_right_p:
         servo_right()
-        if currentPos >= maxPos:
-            max_right_pos = True
-            max_left_pos = False
-    if not max_left_pos:
+        if currentPos >= max_p:
+            max_right_p = True
+            max_left_p = False
+
+    if not max_left_p:
         servo_left()
-        if currentPos <= minPos:
-            max_right_pos = False
-            max_left_pos = True
-
-        # Moves the servo to the left once. But if its already at its max left position (minPos)
+        if currentPos <= min_p:
+            max_right_p = False
+            max_left_p = True
 
 
-# then it won't move left anymore
+# move left
 def servo_left():
     global currentPos
-    # Checks to see if its already at the max left (minPos) posistion
-    if currentPos > minPos:
-        currentPos = currentPos - incrementServo
+
+    # move left if not at minimum position
+    if currentPos > min_p:
+        currentPos = currentPos - increment
         servo.ChangeDutyCycle(currentPos)
-    time.sleep(.05)  # Sleep because it reduces jitter
-    servo.ChangeDutyCycle(0)  # Stop sending a signal servo also to stop jitter
+
+    # jitter problems
+    time.sleep(.05)
+    servo.ChangeDutyCycle(0)
 
 
-# Moves the servo to the left once. But if its already at its max right position (maxPos)
-# then it won't move right anymore
+# move right
 def servo_right():
     global currentPos
-    # Checks to see if its already at the max right (maxPos) posistion
-    if currentPos < maxPos:
-        currentPos = currentPos + incrementServo
-        servo.ChangeDutyCycle(currentPos)
-    time.sleep(.05)  # Sleep because it reduces jitter
-    servo.ChangeDutyCycle(0)  # Stop sending a signal servo also to stop jitter
 
-# If the face is wisthin the predetermined range don't do anything. If its outside of the range
-# Adjust the servo so that the face is back in the range again. This is misleading though
-# because the SERVO is turning left, however its left is our right and vice-verca.
+    # move right if not at maximum position
+    if currentPos < max_p:
+        currentPos = currentPos + increment
+        servo.ChangeDutyCycle(currentPos)
+
+    # jitter problems
+    time.sleep(.05)
+    servo.ChangeDutyCycle(0)
+
+
+# track the face while it is moving
 def track_face(face_position):
-    # turn the SERVO to the left (our right)
-    if face_position > rangeRight:
+    # servo to the left (our right)
+    if face_position > scan_range_right:
         servo_left()
 
-    # turn the SERVO to the right (our left)
-    if face_position < rangeLeft:
+    # servo to the right (our left)
+    if face_position < scan_range_left:
         servo_right()
+
+    # jitter problems
     time.sleep(.05)
     servo.ChangeDutyCycle(0)
 
@@ -117,7 +121,7 @@ def loop():
     global CFace
     # led
     GPIO.output(LED_G, GPIO.HIGH)
-    while (True):
+    while True:
 
         # capture frame by frame
         ret, frame = cap.read()
@@ -148,7 +152,7 @@ def loop():
 
         else:
             test = 0
-            scan()
+            scan_face()
         # set the value back to zero for the next pass
         CFace = 0
 

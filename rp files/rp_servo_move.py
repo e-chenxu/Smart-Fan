@@ -36,8 +36,8 @@ time.sleep(2)
 
 # arrays and such
 currentPos = 7.5
-max_right_pos = False
-max_left_pos = True
+max_right_p = False
+max_left_p = True
 minPos = 3  # This is the most left position within non-breakage range for the servo
 maxPos = 11.5  # This is the most right position within non-breakage range for the servo
 rangeRight = 230  # This refers the the X range for the face detection
@@ -59,8 +59,8 @@ cap.set(4, 240)
 # the max left position.
 def scan():
     global currentPos
-    global max_right_pos
-    global max_left_pos
+    global max_right_p
+    global max_left_p
 
     if not max_right_pos:
         servo_right()
@@ -73,13 +73,13 @@ def scan():
             max_right_pos = False
             max_left_pos = True
 
-        # Moves the servo to the left once. But if its already at its max left position (minPos)
+        # Moves the servo to the left once. But if its already at its max left position (min_p)
 
 
 # then it won't move left anymore
 def servo_left():
     global currentPos
-    # Checks to see if its already at the max left (minPos) posistion
+    # Checks to see if its already at the max left (min_p) posistion
     if currentPos > minPos:
         currentPos = currentPos - incrementServo
         servo.ChangeDutyCycle(currentPos)
@@ -87,11 +87,11 @@ def servo_left():
     servo.ChangeDutyCycle(0)  # Stop sending a signal servo also to stop jitter
 
 
-# Moves the servo to the left once. But if its already at its max right position (maxPos)
+# Moves the servo to the left once. But if its already at its max right position (max_p)
 # then it won't move right anymore
 def servo_right():
     global currentPos
-    # Checks to see if its already at the max right (maxPos) posistion
+    # Checks to see if its already at the max right (max_p) posistion
     if currentPos < maxPos:
         currentPos = currentPos + incrementServo
         servo.ChangeDutyCycle(currentPos)
