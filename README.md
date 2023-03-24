@@ -1,5 +1,7 @@
 # Smart Fan
-An improved model of a regular fan that aims to fix all of the regular fan's problems
+An improved model of a regular fan that aims to fix all of the regular fan's problems.
+
+This is a hardware / software project.
 
 ## Description
 We improved the current fan model with some new features:
