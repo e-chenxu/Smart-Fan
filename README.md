@@ -3,6 +3,9 @@ An improved model of a regular fan that aims to fix all of the regular fan's pro
 
 This is a hardware / software project.
 
+<img src="smart fan.png" width="550">
+
+
 ## Description
 We improved the current fan model with some new features:
 
