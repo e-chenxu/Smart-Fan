@@ -1,7 +1,7 @@
 # Smart Fan
 An improved model of a regular fan that aims to fix all of the regular fan's problems.
 
-This is a hardware / software project.
+This is a mini hardware / software project.
 
 <img src="smart fan.png" width="550">
 
